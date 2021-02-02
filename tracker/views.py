@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CreateUserForm
+from .forms import CreateUserForm, CreateTrackItem
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .models import Item
 
 
 def login_page(request):
@@ -43,4 +44,14 @@ def register(request):
 
 @login_required(login_url='login')
 def home(request):
-    return render(request, 'tracker/home.html')
+    tracked_items = Item.objects.filter(user=request.user)
+    form = CreateTrackItem()
+    if request.method == "POST":
+        url = request.POST.get("url")
+        new_item = form.save(commit=False)
+        new_item.url = url
+        new_item.user = request.user
+        new_item.save()
+        return redirect('home')
+    return render(request, 'tracker/home.html', {'tracked_items': tracked_items, 'form': form})
+

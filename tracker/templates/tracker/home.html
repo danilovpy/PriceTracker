@@ -5,7 +5,17 @@
     <title>Home</title>
 </head>
 <body>
-    <span>Hello, {{ request.user }}</span>
+    <span>Hello, {{ request.user }} id = {{ request.user.id }}</span>
     <span><a href="{% url 'logout' %}">Logout</a> </span>
+    {% for item in tracked_items %}
+        {{ item }}
+    {% endfor %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+
+
 </body>
 </html>
