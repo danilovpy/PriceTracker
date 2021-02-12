@@ -11,8 +11,14 @@ def get_link_data(url):
 
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "lxml")
-    name = soup.select_one(selector="#productTitle").getText().strip()
-    price = float(soup.select_one(selector="#priceblock_ourprice").getText().strip()[1:])
-    return name, price
-
+    name = soup.select_one(selector="#productTitle")
+    price = soup.select_one(selector="#priceblock_ourprice")
+    if name and price:
+        name = name.getText().strip()
+        price = float(price.getText().strip()[1:])
+        return name, price
+    else:
+        price = "unavailable"
+        name = "unavailable"
+        return name, price
 
