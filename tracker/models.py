@@ -32,9 +32,13 @@ class Item(models.Model):
 
     def save(self, *args, **kwargs):
         name, price = get_link_data(self.url)
-        self.old_price = self.current_price
+        if price == "unavailable":
+            self.delete()
+            return 0
+        old_price = self.current_price
         if self.current_price:
-            self.price_difference = round(self.old_price - price, 2)
+            self.price_difference = round(old_price - price, 2)
+            self.old_price = old_price
         else:
             self.old_price = 0
             self.price_difference = 0
