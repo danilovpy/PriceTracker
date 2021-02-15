@@ -1,8 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
-from .utils import get_link_data
 
-# Create your models here.
+from .utils import get_link_data
+from django.contrib.auth.models import AbstractUser, UserManager
+
+
+class CustomUserManager(UserManager):
+    def get_by_natural_key(self, username):
+        case_insensitive_username = f'{self.model.USERNAME_FIELD}__iexact'
+        return self.get(**{case_insensitive_username: username})
+
+
+class User(AbstractUser):
+    objects = CustomUserManager()
 
 
 class Item(models.Model):

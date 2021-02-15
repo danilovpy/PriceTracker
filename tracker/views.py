@@ -38,7 +38,7 @@ def register(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f"Account has been created for {username}")
-            return redirect(request, 'login')
+            return redirect('login')
     return render(request, 'tracker/register.html', {'form': form})
 
 
